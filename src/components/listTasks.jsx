@@ -8,8 +8,9 @@ class ListTasks extends Component {
         <ul style={{ listStyleType: "none" }}>
           {tasks.map((tasks) => (
             <li key={tasks._id}>
-              <h6 key={tasks._id} className="">
-                {tasks._id}
+              <h6 className="badge bg-primary" key={tasks._id}>
+                {" "}
+                <br /> {tasks._id}
               </h6>
               <h3 key={tasks.title}>{tasks.title}</h3>
               <p key={tasks.task}>{tasks.task}</p>
