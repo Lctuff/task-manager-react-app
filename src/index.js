@@ -8,7 +8,7 @@ import ListTasks from "./components/listTasks"
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ListTasks />
+    <App />
   </React.StrictMode>
 );
 
