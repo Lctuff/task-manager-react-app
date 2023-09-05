@@ -1,28 +1,49 @@
 import React, { Component } from "react";
 import Complete from "./complete";
+import Pagination from "./common/pagination";
+
 class ListTasks extends Component {
   render() {
     return (
       <div>
-        <ul style={{ listStyleType: "none" }}>
+        <table className="table">
+          <thead className="table-dark">
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Task</th>
+              <th scope="col">Category</th>
+              <th scope="col">Severity</th>
+              <th scope="col">Completed</th>
+            </tr>
+          </thead>
           {this.props.tasks.map((task) => (
-            <li key={task._id}>
-              <br />
-              <h3 key={task.title}>{task.title}</h3>
-              <p key={task.task}>{task.task}</p>
-              <p key={task.category}>{task.category}</p>
-              <p key={task.severity._id}>
-                {task.severity.name} <br />{" "}
-              </p>
-
-              <Complete
-                key={task.completed}
-                tasks={task}
-                onComplete={this.props.onComplete}
-              />
-            </li>
+            <tbody key={task._id}>
+              <tr>
+                <th scope="row" key={task.title}>
+                  {task.title}
+                </th>
+                <td key={task.task}>{task.task}</td>
+                <td key={task.category}>{task.category}</td>
+                <td key={task.severity._id}>
+                  {task.severity.name} <br />{" "}
+                </td>
+                <td>
+                  <Complete
+                    key={task.completed}
+                    tasks={task}
+                    onComplete={this.props.onComplete}
+                  />
+                </td>
+              </tr>
+            </tbody>
           ))}
-        </ul>
+        </table>
+        <Pagination
+          itemsCount={this.props.taskCount}
+          pageSize={this.props.pageSize}
+          currentPage={this.props.currentPage}
+          onPageChange={this.props.onPageChange}
+        />
       </div>
     );
   }

@@ -1,51 +1,15 @@
-import React, { Component } from 'react';
-import './App.css';
-import ListTasks from './components/listTasks';
+import React, { Component } from "react";
+import "./App.css";
+import ListTasks from "./components/listTasks";
+import "bootstrap/dist/css/bootstrap.css";
+import { getTasks } from "./fakeTaskService-1";
+import { paginate } from "./utils/paginate";
 
 class App extends Component {
   state = {
-    tasks: [
-      {
-        _id: "618c3432eddf61c496096578",
-        title: "Stay Hydrated",
-        task: "Drink da dew",
-        category: "DayToDay",
-        severity: { _id: "61b017eb0cce782d386e7371", name: "Very Important" },
-        completed: false,
-      },
-      {
-        _id: "618c3459eddf61c49609657a",
-        title: "Dishes",
-        task: "Do the dishes",
-        category: "Home",
-        severity: { _id: "61b017a20cce782d386e736f", name: "Normal" },
-        completed: false,
-      },
-      {
-        _id: "618c345feddf61c49609657c",
-        title: "Laundry",
-        task: "Do Laundry",
-        category: "Home",
-        severity: { _id: "61b017a20cce782d386e736f", name: "Normal" },
-        completed: false,
-      },
-      {
-        _id: "618c3469eddf61c49609657e",
-        title: "Report",
-        task: "Make Employee Report",
-        category: "Work",
-        severity: { _id: "61b017cc0cce782d386e7370", name: "Important" },
-        completed: false,
-      },
-      {
-        _id: "618c3474eddf61c496096580",
-        title: "Brush Teeth",
-        task: "Brush my Teeth",
-        category: "Home",
-        severity: { _id: "61b017eb0cce782d386e7371", name: "Very Important" },
-        completed: false,
-      },
-    ],
+    tasks: getTasks(),
+    currentPage: 1,
+    pageSize: 4,
   };
   handleComplete = (task) => {
     const tasks = [...this.state.tasks];
@@ -56,17 +20,29 @@ class App extends Component {
     this.setState({ tasks });
   };
 
-  render() { 
+  handlePageChange = (page) => {
+    this.setState({ currentPage: page });
+  };
+  render() {
+    const { pageSize, currentPage, tasks: allTasks } = this.state;
+
+    const tasks = paginate(allTasks, currentPage, pageSize);
+
     return (
       <div>
-        <main className='container'>
-          <ListTasks 
-          tasks = {this.state.tasks}
-          onComplete ={this.handleComplete}/>
+        <main className="container">
+          <ListTasks
+            tasks={tasks}
+            onComplete={this.handleComplete}
+            taskCount={this.state.tasks.length}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={this.handlePageChange}
+          />
         </main>
       </div>
     );
   }
 }
- 
+
 export default App;

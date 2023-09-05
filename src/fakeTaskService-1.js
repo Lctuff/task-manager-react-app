@@ -42,7 +42,7 @@ const tasks = [
 ];
 
 export function getTasks() {
-  console.log(tasks);
+  //console.log(tasks);
   return tasks;
 }
 
