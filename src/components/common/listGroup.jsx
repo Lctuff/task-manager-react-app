@@ -1,12 +1,12 @@
-import { isEmpty } from "lodash";
 import React from "react";
 
 const ListGroup = (props) => {
-  const { items, textProperty, valueProperty, onItemSelect, selectedItem } =
+  const { items, textProperty, titleProperty, onItemSelect, selectedItem } =
     props;
 
   return (
     <ul className="list-group">
+      <li className="list-group-item list-group-item-info">{titleProperty}</li>
       {items.map((item) => (
         <li
           onClick={() => onItemSelect(item)}
