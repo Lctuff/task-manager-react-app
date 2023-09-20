@@ -1,3 +1,5 @@
+import { severitys } from "./fakeSeverityService";
+
 const tasks = [
   {
     _id: "618c3432eddf61c496096578",
@@ -55,11 +57,11 @@ export function saveTask(task) {
   taskInDb.title = task.title;
   taskInDb.task = task.task;
   taskInDb.category = task.category;
-  taskInDb.severity = task.severity;
+  taskInDb.severity = severitys.find((s) => s._id === task.severityId);
   taskInDb.completed = task.completed;
 
   if (!taskInDb._id) {
-    taskInDb._id = Date.now();
+    taskInDb._id = Date.now.toString();
     tasks.push(taskInDb);
   }
   console.log(taskInDb);
@@ -71,4 +73,4 @@ export function deleteTask(id) {
   tasks.splice(tasks.indexOf(taskInDb), 1);
   return taskInDb;
 }
-export default tasks
+export default tasks;

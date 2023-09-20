@@ -8,10 +8,11 @@ import { paginate } from "./utils/paginate";
 import { getSeveritys } from "./services/fakeSeverityService";
 import _ from "lodash";
 import TaskForm from "./components/taskForm";
-import Admin from "./components/admin";
-import Login from "./components/login";
+
+import LoginForm from "./components/loginForm";
 import NotFound from "./components/notFound";
 import NavBar from "./components/navBar";
+import RegisterForm from "./components/registerForm";
 
 class App extends Component {
   state = {
@@ -20,6 +21,8 @@ class App extends Component {
     pageSize: 4,
     severitys: [],
     sortColumn: { path: "title", order: "asc" },
+    searchQuery: "",
+    selectedSeverity: null,
   };
 
   componentDidMount() {
@@ -42,7 +45,11 @@ class App extends Component {
   };
 
   handleSeveritySelect = (severity) => {
-    this.setState({ selectedSeverity: severity, currentPage: 1 });
+    this.setState({
+      selectedSeverity: severity,
+      searchQuery: "",
+      currentPage: 1,
+    });
   };
 
   handleSort = (sortColumn) => {
@@ -55,17 +62,30 @@ class App extends Component {
       currentPage,
       selectedSeverity,
       tasks: allTasks,
+      searchQuery,
       sortColumn,
     } = this.state;
-    const filtered =
-      selectedSeverity && selectedSeverity._id
-        ? allTasks.filter((t) => t.severity._id === selectedSeverity._id)
-        : allTasks;
+    let filtered = allTasks;
+    if (searchQuery)
+      filtered = allTasks.filter((t) =>
+        t.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    else if (selectedSeverity && selectedSeverity._id)
+      filtered = allTasks.filter(
+        (t) => t.severity._id === selectedSeverity._id
+      );
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
     const tasks = paginate(sorted, currentPage, pageSize);
 
     return { totalCount: filtered.length, data: tasks };
+  };
+  handleSearch = (query) => {
+    this.setState({
+      searchQuery: query,
+      selectedSeverity: null,
+      currentPage: 1,
+    });
   };
 
   render() {
@@ -78,8 +98,8 @@ class App extends Component {
         <main className="container">
           <Switch>
             <Route path="/tasks/:id" component={TaskForm} />
-            <Route path="/admin" component={Admin} />
-            <Route path="/login" component={Login} />
+            <Route path="/register" component={RegisterForm} />
+            <Route path="/login" component={LoginForm} />
             <Route path="/not-found" component={NotFound} />
             <Route
               path="/tasks"
@@ -97,6 +117,8 @@ class App extends Component {
                   selectedItem={this.state.selectedSeverity}
                   onSort={this.handleSort}
                   sortColumn={this.state.sortColumn}
+                  onChange={this.handleSearch}
+                  searchQuery={this.state.searchQuery}
                   {...props}
                 />
               )}

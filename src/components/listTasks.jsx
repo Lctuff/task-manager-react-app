@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup";
 import TasksTable from "./tasksTable";
+import { Link } from "react-router-dom";
+import SearchBox from "./common/searchBox";
 
 class ListTasks extends Component {
   render() {
@@ -17,6 +19,17 @@ class ListTasks extends Component {
           />
         </div>
         <div className="col">
+          <Link
+            to="/tasks/new"
+            className="btn btn-primary"
+            style={{ marginBottom: 20 }}
+          >
+            New Task
+          </Link>
+          <SearchBox
+            value={this.props.searchQuery}
+            onChange={this.props.onChange}
+          />
           <TasksTable
             tasks={this.props.tasks}
             onComplete={this.props.onComplete}
