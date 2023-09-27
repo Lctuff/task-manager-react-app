@@ -18,6 +18,17 @@ class TasksTable extends Component {
         <Complete tasks={task} onComplete={this.props.onComplete} />
       ),
     },
+    {
+      key: "delete",
+      content: (task) => (
+        <button
+          className="btn btn-danger"
+          onClick={() => this.props.onDelete(task)}
+        >
+          Delete
+        </button>
+      ),
+    },
   ];
 
   render() {

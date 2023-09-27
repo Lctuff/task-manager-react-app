@@ -1,8 +1,8 @@
 import React from "react";
 import Form from "./common/form";
 import Joi from "joi-browser";
-import { getTask, saveTask } from "../services/fakeTaskService-1";
-import { getSeveritys } from "../services/fakeSeverityService";
+import { getTask, saveTask } from "../services/taskService";
+import { getSeveritys } from "../services/severityService";
 
 class TaskForm extends Form {
   state = {
@@ -23,17 +23,26 @@ class TaskForm extends Form {
     severityId: Joi.string().required().label("Severity"),
   };
 
-  componentDidMount() {
-    const severitys = getSeveritys();
+  async populateSeverities() {
+    const { data: severitys } = await getSeveritys();
     this.setState({ severitys });
+  }
+  async populateTask() {
+    try {
+      const taskId = this.props.match.params.id;
+      if (taskId === "new") return;
 
-    const taskId = this.props.match.params.id;
-    if (taskId === "new") return;
+      const { data: task } = await getTask(taskId);
+      this.setState({ data: this.mapToViewModel(task) });
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        this.props.history.replace("/not-found");
+    }
+  }
 
-    const task = getTask(taskId);
-    if (!task) return this.props.history.replace("/not-found");
-
-    this.setState({ data: this.mapToViewModel(task) });
+  async componentDidMount() {
+    await this.populateSeverities();
+    await this.populateTask();
   }
 
   mapToViewModel(task) {
@@ -45,8 +54,8 @@ class TaskForm extends Form {
       severityId: task.severity._id,
     };
   }
-  doSubmit = () => {
-    saveTask(this.state.data);
+  doSubmit = async () => {
+    await saveTask(this.state.data);
 
     this.props.history.push("/tasks");
   };

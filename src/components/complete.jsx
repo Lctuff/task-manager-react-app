@@ -7,7 +7,10 @@ class Complete extends Component {
   }
   render() {
     return (
-      <button onClick={() => this.props.onComplete(this.props.tasks)}>
+      <button
+        className="btn btn-primary"
+        onClick={() => this.props.onComplete(this.props.tasks)}
+      >
         {this.formatComplete()}
       </button>
     );
