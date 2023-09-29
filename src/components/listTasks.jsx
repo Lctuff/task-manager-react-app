@@ -106,6 +106,7 @@ class ListTasks extends Component {
   render() {
     const { pageSize, currentPage } = this.state;
     const { totalCount, data: tasks } = this.getPageData();
+    const { user } = this.props;
     return (
       <div className="row">
         <div className="col-3">
@@ -118,13 +119,15 @@ class ListTasks extends Component {
           />
         </div>
         <div className="col">
-          <Link
-            to="/tasks/new"
-            className="btn btn-primary"
-            style={{ marginBottom: 20 }}
-          >
-            New Task
-          </Link>
+          {user && (
+            <Link
+              to="/tasks/new"
+              className="btn btn-primary"
+              style={{ marginBottom: 20 }}
+            >
+              New Task
+            </Link>
+          )}
           <SearchBox
             value={this.state.searchQuery}
             onChange={this.handleSearch}
